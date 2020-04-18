@@ -19,6 +19,7 @@ export class RegisterComponent implements OnInit {
     this.authService.register(this.model).subscribe(resp=>{
       console.log('register success');
     },error=>{
+      console.log(error);
       console.log('register failed');
     });
   }
