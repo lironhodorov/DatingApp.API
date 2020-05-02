@@ -14,5 +14,14 @@ namespace DatingApp.API.Helpers
             response.Headers.Add("Access-Control-Expose-Headers", "Application-Error");
             response.Headers.Add("Access-Control-Allow-Origin", "*");
         }
+        public static int Age(this DateTime dateOfBirth)
+        {
+            int age = DateTime.Now.Year - dateOfBirth.Year;
+            if (dateOfBirth.AddYears(age) > DateTime.Now.Date)
+            {
+                age--;
+            }
+            return age;
+        }
     }
 }
