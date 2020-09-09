@@ -20,7 +20,7 @@ namespace DatingApp.API.Controllers
         private readonly IDatingRepository _repo;
         private readonly IMapper _mapper;
 
-        public UsersController(IDatingRepository repo,IMapper mapper)
+        public UsersController(IDatingRepository repo, IMapper mapper)
         {
             _repo = repo;
             _mapper = mapper;
@@ -34,7 +34,7 @@ namespace DatingApp.API.Controllers
             return Ok(mappedUsers);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name = "GetUser")]
         public async Task<IActionResult> GetUser(int id)
         {
             var user = await _repo.GetUser(id);
@@ -43,18 +43,18 @@ namespace DatingApp.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUser(int id,UserForEditDto userForEdit)
+        public async Task<IActionResult> UpdateUser(int id, UserForEditDto userForEdit)
         {
             //try to edit the not logged in user
-           if(id!= int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+            if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
             {
                 return Unauthorized();
             }
             else
             {
                 var user = await _repo.GetUser(id);
-                var mappedUser = _mapper.Map(userForEdit,user);
-               if(await _repo.SaveAll())
+                var mappedUser = _mapper.Map(userForEdit, user);
+                if (await _repo.SaveAll())
                 {
                     return NoContent();
                 }

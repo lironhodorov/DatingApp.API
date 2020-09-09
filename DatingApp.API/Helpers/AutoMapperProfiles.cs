@@ -25,6 +25,7 @@ namespace DatingApp.API.Helpers
                 ForMember(dest => dest.PublicId, opt => opt.MapFrom(src => src.PhotoId)); ;
             CreateMap<PhotoForCreationDto, Photo>().
                 ForMember(dest => dest.PhotoId, opt => opt.MapFrom(src=>src.PublicId));
+            CreateMap<UserForRegisterDto, User>();
         }
     }
 }
