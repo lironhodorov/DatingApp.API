@@ -38,6 +38,7 @@ namespace DatingApp.API
             services.AddCors();
             services.AddScoped<IAuthRepository, AuthRepository>();
             services.AddScoped<IDatingRepository, DatingRepository>();
+            services.AddScoped<LogUserActivity>();
             services.AddControllers().AddNewtonsoftJson(opt=>
             {
                 opt.SerializerSettings.ReferenceLoopHandling =
