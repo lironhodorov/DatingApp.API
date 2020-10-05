@@ -1,5 +1,6 @@
 import { BrowserModule, HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { ButtonsModule } from 'ngx-bootstrap/buttons';
 import {Routes, RouterModule} from '@angular/router';
 import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
@@ -30,6 +31,8 @@ import { PreventUnsavedChanges } from './_guards/prevent-unsaved-changes.guard';
 import {PhotoEditorComponent} from './members/photo-editor/photo-editor.component';
 import { FileUploadModule } from 'ng2-file-upload';
 import {TimeAgoPipe} from 'time-ago-pipe';
+import { PaginationModule } from 'ngx-bootstrap/pagination';
+import { ListsResolver } from './_resolvers/lists.resolver';
 
 export function tokenGetter(){
 return localStorage.getItem('token');
@@ -57,6 +60,8 @@ export class CustomHammerConfig extends HammerGestureConfig  {
       TimeAgoPipe
    ],
    imports: [
+      ButtonsModule.forRoot(),
+      PaginationModule.forRoot(),
       BrowserAnimationsModule,
       BsDatepickerModule.forRoot(),
       BrowserModule,
@@ -81,6 +86,7 @@ export class CustomHammerConfig extends HammerGestureConfig  {
       AlertifyService,
       ErrorInterceptorProvider,
       MemberDetailResolver,
+      ListsResolver,
       MemberListResolver,
       MemberEditResolver,
       {provide: HAMMER_GESTURE_CONFIG, useClass: CustomHammerConfig },

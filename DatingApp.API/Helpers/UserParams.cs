@@ -1,0 +1,26 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace DatingApp.API.Helpers
+{
+    public class UserParams
+    {
+        public int MaxPageSize = 50;
+        public int CurrentPage { get; set; } = 1;
+        private int pageSize { get; set; } = 10;
+        public int PageSize
+        {
+            get { return pageSize; }
+            set { pageSize = (value <= MaxPageSize) ? value : MaxPageSize; }
+        }
+        public int UserId { get; set; }
+        public string Gender { get; set; }
+        public string OrderBy { get; set; }
+        public int MinAge { get; set; } = 18;
+        public int MaxAge { get; set; } = 99;
+        public bool Likees { get; set; } = false;
+        public bool Likers { get; set; } = false;
+    }
+}

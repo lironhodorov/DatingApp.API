@@ -28,7 +28,6 @@ if(this.editForm.dirty){
 
   ngOnInit() {
    this.route.data.subscribe(result=>{
-     debugger;
      this.user=result['user'];
     });
    this.authService.currentPhotoUrl.subscribe(x=>this.photoUrl=x);
@@ -44,7 +43,6 @@ if(this.editForm.dirty){
     });
   }
   updateMainPhoto(photoUrl){
-    debugger;
     this.user.photoUrl=photoUrl;
   }
 }

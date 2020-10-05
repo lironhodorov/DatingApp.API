@@ -7,6 +7,7 @@ using AutoMapper;
 using DatingApp.API.Data;
 using DatingApp.API.Dtos;
 using DatingApp.API.Helpers;
+using DatingApp.API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -30,10 +31,18 @@ namespace DatingApp.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetUsers()
+        public async Task<IActionResult> GetUsers([FromQuery]UserParams userParams)
         {
-            var users = await _repo.GetUsers();
+            int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var userFromRepo = await _repo.GetUser(userId);
+            userParams.UserId = userId;
+            if (string.IsNullOrWhiteSpace(userParams.Gender))
+            {
+                userParams.Gender = userFromRepo.Gender == "male" ? "female" : "male";
+            }
+            var users = await _repo.GetUsers(userParams);
             var mappedUsers = _mapper.Map<IEnumerable<UserForListDto>>(users);
+            Response.AddPaginationHeader(users.CurrentPage, users.TotalPages, users.PageSize, users.TotalCount);
             return Ok(mappedUsers);
         }
 
@@ -64,5 +73,37 @@ namespace DatingApp.API.Controllers
                 throw new Exception($"updating user {id} failed on save");
             }
         }
+
+        [HttpPost("{id}/like/{likeeId}")]
+        public async Task<IActionResult> LikeUser(int id, int likeeId)
+        {
+            if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+            {
+                return Unauthorized();
+            }
+            var like = await _repo.GetLike(likeeId, id);
+            if (like != null)
+            {
+                return BadRequest("The like already exists");
+            }
+            var userToLike = _repo.GetUser(likeeId);
+            if (userToLike == null)
+            {
+                return NotFound();
+            }
+            like = new Like
+            {
+                LikerId = id,
+                LikeeId = likeeId
+            };
+            _repo.Add<Like>(like);
+            if(await _repo.SaveAll())
+            {
+                return Ok();
+            }
+            return BadRequest("Failed to like user");
+        }
+
+
     }
 }
